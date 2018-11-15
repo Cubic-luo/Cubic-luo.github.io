@@ -161,6 +161,7 @@
             alert("微信号不能为空")
             return
         }
+        $("#result").text("")
         $.ajax({
             type: 'POST',
             url: 'http://203.195.205.64:8081/get',
