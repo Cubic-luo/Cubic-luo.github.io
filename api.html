@@ -1,241 +1,858 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1, minimum-scale=1, user-scalable=no">
-<title>口令提取</title>
-<script type="text/javascript" src="//lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
-<style>
-blockquote, body, dd, dir, dl, fieldset, figure, form, h1, h2, h3, h4, h5, h6, hr, input, legend, menu, ol, optgroup, p, pre, tbody, td, textarea, tfoot, th, thead, ul {
-	margin: 0;
-	padding: 0
-}
+	<meta charset="utf-8">
+	<meta name="viewport"
+		content="width=device-width,initial-scale=1.0,maximum-scale=1, minimum-scale=1, user-scalable=no">
+	<title>口令提取</title>
+	<!-- <style>
+		/*reset*/
 
-ol, ul {
-	list-style-type: none;
-	list-style-image: none
-}
-
-body, button, input, select, textarea {
-	-ms-text-autospace: ideograph-alpha ideograph-numeric ideograph-parenthesis;
-	text-autospace: ideograph-alpha ideograph-numeric ideograph-parenthesis
-}
-
-h1, h2, h3, h4, h5, h6 {
-	font-weight: 400
-}
-
-* {
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-body {
-	background: #F6F5F7;
-}
-
-.beatHeader {
-	background: #494A4D;
-	height: 50px;
-	width: 100%;
-	position: relative;
-	z-index: 1;
-	overflow: hidden;
-}
-
-.beatMain {
-	position: relative;
-	z-index: 2;
-	padding: 0 16px;
-
-}
-
-.beatMain .imgContainer {
-	padding: 0 16px;
-	margin-top: 14px;
-}
-
-.beatMain .imgContainer img {
-	width: 100%;
-	height: auto;
-	box-shadow: 0px 3px 12px rgba(21, 0, 71, 0.16);
-}
-
-.beatMain .moonTitleContainer {
-	font-size: 14px;
-	color: rgba(0, 0, 0, 0.4);
-	margin-bottom: 16px;
-}
-
-.beatMain .moonTitleContainer span {
-	color: #FF5500;
-	margin-right: 16px;
-}
-
-.beatMain .itemContent {
-	font-size: 14px;
-	color: rgba(0, 0, 0, 0.80);
-	line-height: 21px;
-	text-align: left;
-	margin-bottom: 10px;
-}
-
-.beatMain .itemPrice {
-	font-family: STHeitiSC-Light;
-	font-size: 16px;
-	color: #FF5500;
-	line-height: 16.5px;
-	text-align: right;
-	margin-bottom: 10px;
-}
-
-.beatMain .itemTips {
-	font-size: 12px;
-	color: rgba(0,0,0,.4);
-	text-align: center;
-}
-
-.beatWord {
-	text-align: center;
-}
-
-.beatWord fieldset {
-	padding: 0.8em;
-	margin: 0 2px;
-	border: 1px dashed #f54d23;
-	background: #fff;
-}
-
-.beatWord fieldset legend {
-	background: #f54d23;
-	border: none;
-	font-size: 0.8rem;
-	line-height: 20px;
-	color: #fff;
-	padding: 0 4px;
-}
-
-.beatWord button {
-	border: none;
-	font-size: 16px;
-	padding: 6px 15px;
-	background: #f60;
-	display: inline-block;
-	margin: 10px auto;
-	border-radius: 16px;
-	color: #fff;
-}
-</style>
-</head>
-<body>
-
-<div class="beatMain">
-	<div class="imgContainer">
-		<img id="img" src="" alt="">
-	</div>
-	<p class="itemContent">
-		<strong class="itemPrice"></strong>
-		<div id="item_title" style="font-weight: 700;font-size: 14px;margin-bottom: 5px;"></div>
-	</p>
-	<div class="beatWord">
-		<fieldset>
-			<legend id="copy_tip">长按框内>全选>复制>打开手淘</legend>
-			<p id="itemWord" class="itemWord" style="font-size: 12px;">复制框内整段文字，打开「手淘」即可「领取优惠券」并购买<span id="taokey"></span></p>
-		</fieldset>
-		<button id="copy" type="button" data-clipboard-text="" class="itemCopy" style="display:none;">手机链接</button>
-		<a id="coupons" href="" style="background: #00a1ff;border: none;font-size: 16px;padding: 6px 15px;display: inline-block;margin: 10px 4px 10px 4px;border-radius: 16px;color: #fff;text-decoration: none;">电脑链接</a>
-			</div>
-</div>
-<script type="text/javascript" src="//lib.baomitu.com/clipboard.js/1.6.1/clipboard.min.js"></script>
-<script>
-
-function getParams(paras){
-	var url = decodeURI(location.href);
-	
-    var paraString = url.substring(url.indexOf("?") + 1, url.length).split("&");
-    var returnValue;
-    for (i = 0; i < paraString.length; i++) {
-        var tempParas = paraString[i].split('=')[0];
-        var parasValue = paraString[i].split('=')[1];
-        if (tempParas === paras)
-            returnValue = parasValue;
-    }
-    if (typeof(returnValue) == "undefined") {
-        return "";
-    } else {
-        return returnValue;
-    }
-}
-
-$(function(){
-	var taowords =getParams('taowords');
-	var url = decodeURIComponent(getParams('url'));
-	var image = decodeURIComponent(getParams('image'));
-	
-	$('#img').attr('src', image);
-	$('#coupons').attr('href',url);
-	$('#copy').attr('data-clipboard-text', '￥'+taowords+'￥');
-	$('#taokey').text('￥'+taowords+'￥');
-})
-
-
-	//复制文本
-var clipboard = new Clipboard('.itemCopy');
-clipboard.on('success',
-function(e) {
-	if (e.trigger.disabled == false || e.trigger.disabled == undefined) {
-		e.trigger.innerHTML = "复制成功，打开淘宝会自动弹出口令";
-		e.trigger.style.backgroundColor = "#9ED29E";
-		e.trigger.style.borderColor = "#9ED29E";
-		//e.clearSelection();
-		e.trigger.disabled = true;
-		//2秒后按钮恢复原状
-		setTimeout(function() {
-			e.trigger.innerHTML = "一键复制";
-			e.trigger.style.backgroundColor = "#f54d23";
-			e.trigger.style.borderColor = "#f54d23";
-			e.trigger.disabled = false;
-		},
-		2000);
-	}
-});
-
-clipboard.on('error',
-function(e) {
-	e.trigger.innerHTML = "复制失败";
-	e.trigger.style.backgroundColor = "#8f8f8f";
-	e.trigger.style.borderColor = "#8f8f8f";
-});
-
-$(function() {
-
-	//UA判断
-	var isShow = 0; //控制是否显示一键复制按钮
-	var ua = navigator.userAgent.toLowerCase();
-
-	if (ua.match(/iphone/i) == "iphone" || ua.match(/ipad/i) == "ipad") {
-
-		$('#copy_tip').text("长按框内 > 拷贝 > 打开手淘");
-		var iphoneInfo = ua.match(/iphone os (\d{1,})/i);
-		var iosVersion = iphoneInfo[1];
-		if (iosVersion >= 10 || ua.match(/ipad/i) == 'ipad') {
-			$('.itemCopy').show();
+		body,
+		div,
+		dl,
+		dt,
+		dd,
+		ul,
+		ol,
+		li,
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6,
+		pre,
+		code,
+		form,
+		fieldset,
+		legend,
+		input,
+		textarea,
+		p,
+		blockquote,
+		th,
+		td,
+		hr,
+		button,
+		article,
+		aside,
+		details,
+		figcaption,
+		figure,
+		footer,
+		header,
+		hgroup,
+		menu,
+		nav,
+		section {
+			margin: 0;
+			padding: 0;
 		}
 
-	} else {
-		$('.itemCopy').show();
-	}
+		/*取消移动端浏览器可点击元素的高亮颜色*/
+		* {
+			-webkit-tap-highlight-color: transparent;
+		}
 
-	//自动选中
-	var beat = document.querySelector('.beatWord');
-	var word = document.querySelector('.itemWord');
-	var copy = document.querySelector('.itemCopy');
-	document.addEventListener("selectionchange",
-	function(e) {
-		window.getSelection().selectAllChildren(word);
-	},
-	false);
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			font-size: 100%;
+			font-weight: 500;
+		}
 
-});
-</script>
+		ol,
+		ul {
+			list-style: none;
+		}
+
+		fieldset,
+		img {
+			border: none 0;
+		}
+
+		html {
+			color: #333;
+			-webkit-text-size-adjust: 100%;
+			-ms-text-size-adjust: 100%;
+			font-family: "\5FAE\8F6F\96C5\9ED1", Helvetica;
+			font-size: 1em/1.25;
+		}
+
+		article,
+		aside,
+		details,
+		figcaption,
+		figure,
+		footer,
+		header,
+		hgroup,
+		menu,
+		nav,
+		section {
+			display: block;
+		}
+
+		audio,
+		canvas,
+		video {
+			display: inline-block;
+		}
+
+		body {
+			font-size: 12px;
+		}
+
+		button,
+		input,
+		select,
+		textarea {
+			font-size: 100%;
+			-webkit-border-radius: 0;
+			border-radius: 0;
+		}
+
+		button,
+		input[type="button"],
+		input[type="reset"],
+		input[type="submit"] {
+			cursor: pointer;
+			-webkit-appearance: button;
+		}
+
+		img,
+		object,
+		video,
+		embed {
+			max-width: 100%;
+			vertical-align: middle;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
+		}
+
+		a {
+			color: #333;
+			text-decoration: none;
+		}
+
+		body .font-ico {
+			font-family: 'icomoon' !important;
+			font-style: normal !important;
+			font-weight: normal;
+			font-variant: normal;
+			text-transform: none;
+			line-height: 1;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		#page-content-w {
+			position: absolute;
+			z-index: 1;
+			top: 50px;
+			bottom: 45px;
+			left: 0;
+			width: 100%;
+			background: white;
+			overflow: auto;
+		}
+
+		#scroller {
+			position: absolute;
+			z-index: 1;
+			-webkit-touch-callout: none;
+			-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+			width: 100%;
+			padding: 0;
+		}
+
+		/*pc预览页时去除iframe中的横向滚动条用*/
+		body {
+			overflow-x: hidden;
+		}
+
+		.mod-loader {
+			display: none;
+			width: 12.5em;
+			filter: Alpha(Opacity=88);
+			opacity: .88;
+			box-shadow: 0 1px 1px -1px #fff;
+			height: auto;
+			margin-left: -6.875em;
+			margin-top: -2.6875em;
+			padding: .625em;
+			z-index: 9999999;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			border: 0;
+		}
+
+		.mod-loader .icon-loading {
+			margin: 0 auto .625em;
+			filter: Alpha(Opacity=75);
+			opacity: .75;
+			background-color: #000;
+			display: block;
+			width: 24px;
+			height: 24px;
+			padding: .0625em;
+			-webkit-border-radius: 2.25em;
+			border-radius: 2.25em;
+			background: url(../images/loading-light.gif);
+			background-size: 24px;
+		}
+
+		.mod-loader h1 {
+			color: #aaa;
+			font-size: 12px;
+			margin: 0;
+			text-align: center;
+		}
+
+		.phone-main .page-w {
+			position: relative;
+			padding-top: 0.1px;
+			overflow: hidden;
+		}
+
+		.font-ico.icon-share2:before {
+			content: "\e63c";
+		}
+
+		.font-ico.icon-good2:before {
+			content: "\e63f";
+		}
+
+		.font-ico.icon-home2:before {
+			content: "\e640";
+		}
+
+		.font-ico.icon-search:before {
+			content: "\e62e";
+		}
+
+		.font-ico.icon-btn-wrong:before {
+			content: "\e657";
+		}
+
+		.font-ico.icon-btn-leftarrow:before {
+			content: "\e66f";
+		}
+
+		.font-ico.icon-btn-time:before {
+			content: "\e658";
+		}
+
+		.font-ico.icon-close:before {
+			content: "\e010";
+		}
+
+		.font-ico.icon-preview:before {
+			content: "\e609";
+		}
+
+		.font-ico.icon-btn-downarrow:before {
+			content: "\e654";
+		}
+
+		.font-ico.icon-btn-uparrow:before {
+			content: "\e653";
+		}
+
+		.kz-page-float-layer {
+			position: fixed;
+			z-index: 100;
+		}
+
+		.kz-page-float-layer.kz-page-bottom {
+			bottom: 0;
+			top: auto;
+			left: 0;
+			right: 0;
+			width: 100%;
+		}
+
+		.kz-page-float-layer.bottom .mod-themenav2 {
+			position: static;
+		}
+
+		.kz-pc .kz-page-float-layer.kz-page-bottom .kz-page-ad-inner-layer {
+			/* height: 100px!important; */
+			width: 89%;
+		}
+
+		.kz-page-float-layer .ad-close-wrap {
+			position: fixed;
+			width: 17px;
+			height: 17px;
+			line-height: 17px;
+			font-size: 9px;
+			bottom: 30px;
+			right: 0;
+			text-align: center;
+			background: rgba(0, 0, 0, 0.20);
+		}
+
+		.kz-page-float-layer .ad-close-wrap span {
+			color: #FFF;
+			display: inline;
+			vertical-align: middle;
+		}
+
+		.kz-page-ad-layer {
+			z-index: 999;
+			height: 40px;
+			text-align: center;
+			background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgi…pZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+			background-size: 100%;
+			background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #434343), color-stop(100%, #3a3a3a));
+			background-image: -moz-linear-gradient(#434343, #3a3a3a);
+			background-image: -webkit-linear-gradient(#434343, #3a3a3a);
+			background-image: linear-gradient(#434343, #3a3a3a);
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+		}
+
+		.kz-page-ad-layer a {
+			display: block;
+			width: 100%;
+			height: 40px;
+		}
+
+		.kz-page-ad-layer a img {
+			/* height: 14px;
+    position: relative;
+    top: -1px;
+    left: -3px; */
+		}
+
+		.kz-page-ad-layer a.center-flow {
+			line-height: 40px;
+			font-size: 14px;
+			color: #fff;
+		}
+
+		.kz-pc .ad-close-wrap {
+			bottom: 83px !important;
+		}
+
+		.kzpc-content .kz-page-ad-layer {
+			display: none;
+		}
+
+		.image-viewer {
+			position: fixed;
+			background: #000;
+			overflow-y: hidden;
+			-webkit-overflow-scrolling: touch;
+			overflow-x: hidden;
+			width: 100%;
+			height: 100%;
+			z-index: 101;
+			display: none;
+			top: 0;
+			left: 0;
+		}
+
+		.image-viewer .paging {
+			position: fixed;
+			top: 80%;
+			left: 0;
+			text-align: center;
+			width: 100%;
+			color: #fff;
+			height: 20px;
+		}
+
+		.image-viewer .paging span {
+			display: inline-block;
+			padding: .2rem .4rem;
+			border-radius: 2px;
+			background: rgba(0, 0, 0, .4);
+			height: 20px;
+			width: 43px;
+			font-size: .6rem;
+		}
+
+		/*底部站长可见管理bar*/
+		.kz-manage {
+			display: none;
+		}
+
+		.footer-manage {
+			width: 100%;
+			height: 3.125rem;
+			background: #fff;
+			border-top: 1px solid #e8e8e8;
+			box-sizing: border-box;
+		}
+
+		.footer-manage .left {
+			float: left;
+			margin-top: 0.75rem;
+			margin-left: 0.75rem;
+			height: 1.625rem;
+		}
+
+		.footer-manage .avatar {
+			height: 1.625rem;
+			width: 1.625rem;
+			display: inline-block;
+		}
+
+		.footer-manage .title {
+			font-size: 0.75rem;
+			color: #000;
+			height: 1.625rem;
+			line-height: 1.625rem;
+			vertical-align: top;
+			display: inline-block;
+			margin-left: 0.625rem;
+		}
+
+		.footer-manage a {
+			text-align: center;
+			width: 5rem;
+			float: right;
+			margin-right: 0.9375rem;
+			margin-top: 0.6875rem;
+			height: 1.75rem;
+			line-height: 1.75rem;
+			font-size: 0.875rem;
+			color: #ffffff;
+			background-color: #37b2f0;
+			border-radius: 0.125rem;
+		}
+
+		body {
+			background: #eee;
+			font-size: 14px;
+		}
+
+		.scenograph {
+			padding: 16px 16px 0;
+		}
+
+		.scenograph #type-bimg {
+			box-shadow: 0px 4px 8px rgba(21, 0, 71, .1);
+			width: 100%;
+		}
+
+		.drugsword {
+			margin: 14px;
+			margin-top: 16px;
+			text-align: center;
+		}
+
+		.medicine-bag {
+			background: white;
+			border: 1px dashed #fb6a65;
+			padding: .5rem;
+			border-radius: 5px;
+		}
+
+		.copy-tip {
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			background: linear-gradient(to right, #f9c492, #fb6a65);
+			color: white;
+			font-size: 12px;
+			height: 24px;
+		}
+
+		.jtone {
+			position: relative;
+			width: 0;
+			height: 0;
+			border-top: 12px solid transparent;
+			border-left: 10px solid white;
+			border-bottom: 12px solid transparent;
+		}
+
+		.jtone::before {
+			content: "";
+			position: absolute;
+			top: -12px;
+			left: -13px;
+			width: 0;
+			height: 0;
+			border-top: 12px solid transparent;
+			border-left: 10px solid #fab189;
+			border-bottom: 12px solid transparent;
+		}
+
+		.jttwo {
+			position: relative;
+			width: 0;
+			height: 0;
+			border-top: 12px solid transparent;
+			border-left: 10px solid white;
+			border-bottom: 12px solid transparent;
+		}
+
+		.jttwo::before {
+			content: "";
+			position: absolute;
+			top: -12px;
+			left: -13px;
+			width: 0;
+			height: 0;
+			border-top: 12px solid transparent;
+			border-left: 10px solid #fa9b7e;
+			border-bottom: 12px solid transparent;
+		}
+
+		.jtthree {
+			position: relative;
+			width: 0;
+			height: 0;
+			border-top: 12px solid transparent;
+			border-left: 10px solid white;
+			border-bottom: 12px solid transparent;
+		}
+
+		.jtthree::before {
+			content: "";
+			position: absolute;
+			top: -12px;
+			left: -13px;
+			width: 0;
+			height: 0;
+			border-top: 12px solid transparent;
+			border-left: 10px solid #fa8673;
+			border-bottom: 12px solid transparent;
+		}
+
+		.icopy {
+			background: #fb6a65;
+			border-radius: 5px;
+			color: white;
+			font-size: 14px;
+			margin: 16px auto;
+			padding: 10px;
+			margin-bottom: 2px;
+		}
+
+		.nomen-proprium {
+			font-size: 12px;
+			text-align: left;
+			color: #fb6a65;
+		}
+
+		.kz-float-layer {
+			height: 0px !important;
+		}
+
+		.kz-float-layer {
+			display: none !important;
+		}
+	</style> -->
+</head>
+
+<body>
+	<div class="page-w " style="background-color:tranparent;">
+		<div id="page-content" class="page-content">
+			<div class="mod mod-html">
+				<style type="text/css">
+					body {
+						background: #eee;
+						font-size: 14px;
+					}
+
+					.scenograph {
+						padding: 16px 16px 0;
+					}
+
+					.scenograph #type-bimg {
+						box-shadow: 0px 4px 8px rgba(21, 0, 71, .1);
+						width: 100%;
+					}
+
+					.drugsword {
+						margin: 14px;
+						margin-top: 16px;
+						text-align: center;
+					}
+
+					.medicine-bag {
+						background: white;
+						border: 1px dashed #fb6a65;
+						padding: .5rem;
+						border-radius: 5px;
+					}
+
+					.copy-tip {
+						display: flex;
+						justify-content: space-around;
+						align-items: center;
+						background: linear-gradient(to right, #f9c492, #fb6a65);
+						color: white;
+						font-size: 12px;
+						height: 24px;
+					}
+
+					.jtone {
+						position: relative;
+						width: 0;
+						height: 0;
+						border-top: 12px solid transparent;
+						border-left: 10px solid white;
+						border-bottom: 12px solid transparent;
+					}
+
+					.jtone::before {
+						content: "";
+						position: absolute;
+						top: -12px;
+						left: -13px;
+						width: 0;
+						height: 0;
+						border-top: 12px solid transparent;
+						border-left: 10px solid #fab189;
+						border-bottom: 12px solid transparent;
+					}
+
+					.jttwo {
+						position: relative;
+						width: 0;
+						height: 0;
+						border-top: 12px solid transparent;
+						border-left: 10px solid white;
+						border-bottom: 12px solid transparent;
+					}
+
+					.jttwo::before {
+						content: "";
+						position: absolute;
+						top: -12px;
+						left: -13px;
+						width: 0;
+						height: 0;
+						border-top: 12px solid transparent;
+						border-left: 10px solid #fa9b7e;
+						border-bottom: 12px solid transparent;
+					}
+
+					.jtthree {
+						position: relative;
+						width: 0;
+						height: 0;
+						border-top: 12px solid transparent;
+						border-left: 10px solid white;
+						border-bottom: 12px solid transparent;
+					}
+
+					.jtthree::before {
+						content: "";
+						position: absolute;
+						top: -12px;
+						left: -13px;
+						width: 0;
+						height: 0;
+						border-top: 12px solid transparent;
+						border-left: 10px solid #fa8673;
+						border-bottom: 12px solid transparent;
+					}
+
+					.icopy {
+						background: #fb6a65;
+						border-radius: 5px;
+						color: white;
+						font-size: 14px;
+						margin: 16px auto;
+						padding: 10px;
+						margin-bottom: 2px;
+					}
+
+					.nomen-proprium {
+						font-size: 12px;
+						text-align: left;
+						color: #fb6a65;
+					}
+
+					.kz-float-layer {
+						height: 0px !important;
+					}
+
+					.kz-float-layer {
+						display: none !important;
+					}
+				</style>
+				<div class="scenograph">
+					<img id="type-bimg"
+						src="https://img.alicdn.com/bao/uploaded/i3/2440919703/O1CN01ktOnOz2LY1WOGvba1_!!0-item_pic.jpg">
+				</div>
+				<div class="drugsword">
+					<div class="medicine-bag">
+						<div>
+							<div id="cccccccckk" class="cccccccckk">
+								复制红框内信息打开→手
+								<a>
+									<img src="https://img.alicdn.com/imgextra/i1/2537963239/O1CN011ZnVKLbSaP1cLAQ_!!2537963239.png"
+										style="width: 6%;">
+								</a>APP←即可领优惠券
+								<span id="np">￥QgMPbG2Pazv￥</span>
+							</div>
+						</div>
+					</div>
+					<div type="button" data-clipboard-text="￥QgMPbG2Pazv￥" class="icopy" id="icopy">一键复制</div>
+					<div id="copy-tip" class="copy-tip">
+						<span>长按框内</span>
+						<span class="jtone"></span>
+						<span>全选</span>
+						<span class="jttwo"></span>
+						<span>复制</span>
+						<span class="jtthree"></span>
+						<span>打开APP</span>
+					</div>
+				</div>
+				<p style="display:none">
+					人生莫过做好三件事：一是选择一条适合自己走的路，别左顾右盼，莫贪多求快，不要误入乱花迷了眼；二是懂得坚持，忌一味跟风，坚守好这一刻，才能看到下一刻的风景；三是懂得如何放弃，属于你的终究有限，放弃繁星，你才能收获黎明。
+				</p>
+			</div>
+			<div class="mod mod-js">
+
+			</div>
+			<div id="image-viewer" class="image-viewer">
+				<div class="view" style="height: 100%; width: 100%;"></div>
+				<div class="paging"></div>
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript" src="//lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
+	<script type="text/javascript" src="//lib.baomitu.com/clipboard.js/1.6.1/clipboard.min.js"></script>
+	<script>
+		var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		var base64DecodeChars = new Array(
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
+			52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
+			-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+			15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
+			-1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+			41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
+
+		function base64decode(str) {
+			var c1, c2, c3, c4;
+			var i, len, out;
+
+			len = str.length;
+			i = 0;
+			out = "";
+			while (i < len) {
+				/* c1 */
+				do {
+					c1 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
+				} while (i < len && c1 == -1);
+				if (c1 == -1)
+					break;
+
+				/* c2 */
+				do {
+					c2 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
+				} while (i < len && c2 == -1);
+				if (c2 == -1)
+					break;
+
+				out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
+
+				/* c3 */
+				do {
+					c3 = str.charCodeAt(i++) & 0xff;
+					if (c3 == 61)
+						return out;
+					c3 = base64DecodeChars[c3];
+				} while (i < len && c3 == -1);
+				if (c3 == -1)
+					break;
+
+				out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
+
+				/* c4 */
+				do {
+					c4 = str.charCodeAt(i++) & 0xff;
+					if (c4 == 61)
+						return out;
+					c4 = base64DecodeChars[c4];
+				} while (i < len && c4 == -1);
+				if (c4 == -1)
+					break;
+				out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
+			}
+			return out;
+		}
+
+
+
+		function getQueryVariable() {
+
+			var url = decodeURI(location.href);
+			if (url.indexOf("&") == -1) { //等于-1表示这个字符串中没有o这个字符
+				var paraString = url.substring(url.indexOf("key=") + 4, url.length);
+			} else {
+				var paraString = url.substring(url.indexOf("key=") + 4, url.indexOf("&") + 1);
+
+			}
+
+
+			return paraString;
+
+
+		}
+		var clipboard = new Clipboard('.icopy');
+		clipboard.on('success', function (e) {
+			if (e.trigger.disabled == false || e.trigger.disabled == undefined) {
+				e.trigger.innerHTML = "复制成功，打开【手陶】购买";
+				e.trigger.style.backgroundColor = "#78bd33";
+				e.trigger.disabled = true;
+				setTimeout(function () {
+					e.trigger.innerHTML = "点击复制";
+					e.trigger.style.backgroundColor = "#fb6a65";
+					e.trigger.disabled = false;
+				},
+					2000);
+			}
+		});
+		clipboard.on('error', function (e) {
+			e.trigger.innerHTML = "复制失败,请手动复制";
+			e.trigger.style.backgroundColor = "#b5b4b4";
+		});
+		$(function () {
+			var key = getQueryVariable();
+			var json = base64decode(key);
+			var jsObject = JSON.parse(json);
+
+			var np = "￥" + jsObject.tkl + "￥"
+
+			var np = np.match(/\w+/);
+			var np = "￥" + np + "￥"
+
+			$("#icopy").attr("data-clipboard-text", np);
+			$("#np").text(np);
+			$("#type-bimg").attr('src', jsObject.image);
+			var mall = getQueryVariable("mall");
+			if (mall) {
+				$("#tomall").attr('href', mall);
+				$("#tomall").css("display", "block");
+			}
+			var word = document.querySelector('.cccccccckk');
+			document.addEventListener("selectionchange",
+				function (e) {
+					window.getSelection().selectAllChildren(word);
+				}, false);
+			$("#phone-main").next().hide();
+		});
+	</script>
 </body>
+
 </html
