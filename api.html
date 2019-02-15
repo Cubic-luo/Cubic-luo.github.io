@@ -249,6 +249,7 @@
 		function getQueryVariable() {
 
 			var url = decodeURI(location.href);
+			console.log(url)
 			if (url.indexOf("&") == -1) { //等于-1表示这个字符串中没有o这个字符
 				var paraString = url.substring(url.indexOf("key=") + 4, url.length);
 			} else {
@@ -283,7 +284,7 @@
 			var key = getQueryVariable();
 			var json = base64decode(key);
 			var jsObject = JSON.parse(json);
-
+			console.log(json)
 			var np = "￥" + jsObject.tkl + "￥"
 
 			var np = np.match(/\w+/);
