@@ -202,6 +202,7 @@
 			return date;
 		}
 		//检测账号
+		var username = getQueryString("username")
 		$.getJSON("username.json", function (data) {
 			$.each(data, function (index, obj) {
 				if (username == obj["username"]) {
