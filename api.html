@@ -201,6 +201,24 @@
 			var date = new Date(year, month - 1, day);
 			return date;
 		}
+		//检测账号
+		$.getJSON("username.json", function (data) {
+			$.each(data, function (index, obj) {
+				if (username == obj["username"]) {
+					console.log("账号" + obj["username"])
+					console.log("有效期" + obj["date"])
+					var usernameDate = stringToDate(obj["date"]);
+					var nowDate = new Date()
+					if (nowDate < usernameDate) {
+						start()
+					}
+				} else {
+					//账号不存在
+					console.log("账号不合法")
+				}
+
+			})
+		})
 		function start() {
 			var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 			var base64DecodeChars = new Array(
@@ -325,25 +343,7 @@
 				$("#phone-main").next().hide();
 			});
 		}
-		//检测账号
-		$.getJSON("username.json", function (data) {
-			$.each(data, function (index, obj) {
-				if (username == obj["username"]) {
-					console.log("账号" + obj["username"])
-					console.log("有效期" + obj["date"])
-					var usernameDate = stringToDate(obj["date"]);
-					var nowDate = new Date()
-					if (nowDate < usernameDate) {
-						start()
-						break
-					}
-				} else {
-					//账号不存在
-					console.log("账号不合法")
-				}
 
-			})
-		})
 	</script>
 </body>
 
