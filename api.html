@@ -301,18 +301,13 @@
 	</script>
 	<script>
 		$(function () {
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "username.json",
-				success: function (result) {
-					$.each(result, function (index, obj) {
-						console.log("账号" + obj["username"])
-						console.log("测试信息" + obj["info"])
-					});
-				}
-			});
-		});
+			$.getJSON("js/userinfo.json", function (data) {
+				$.each(data, function (index, obj) {
+					console.log("账号" + obj["username"])
+					console.log("测试信息" + obj["info"])
+				})
+			})
+		})
 	</script>
 </body>
 
