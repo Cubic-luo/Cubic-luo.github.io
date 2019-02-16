@@ -170,10 +170,12 @@
 			</div>
 		</div>
 	</div>
-	<div style="font-size:12px;display:block;text-align:center;color: #06ad3d;position: fixed;bottom: 0;left: 0;right: 0;line-height: 2.2;">中间页定制  QQ1981729945</div>
-
-	<script type="text/javascript" src="//lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
-	<script type="text/javascript" src="//lib.baomitu.com/clipboard.js/1.6.1/clipboard.min.js"></script>
+	<div
+		style="font-size:12px;display:block;text-align:center;color: #06ad3d;position: fixed;bottom: 0;left: 0;right: 0;line-height: 2.2;">
+		中间页定制 QQ1981729945</div>
+	<script type="text/javascript" src="zepto.min.js"></script>
+	<!-- <script type="text/javascript" src="//lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
+	<script type="text/javascript" src="//lib.baomitu.com/clipboard.js/1.6.1/clipboard.min.js"></script> -->
 	<script>
 		var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 		var base64DecodeChars = new Array(
@@ -296,6 +298,21 @@
 					window.getSelection().selectAllChildren(word);
 				}, false);
 			$("#phone-main").next().hide();
+		});
+	</script>
+	<script>
+		$(function () {
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "username.json",
+				success: function (result) {
+					$.each(result, function (index, obj) {
+						console.log("账号" + obj["username"])
+						console.log("测试信息" + obj["info"])
+					});
+				}
+			});
 		});
 	</script>
 </body>
