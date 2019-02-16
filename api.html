@@ -176,136 +176,172 @@
 	<script type="text/javascript" src="//lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
 	<script type="text/javascript" src="//lib.baomitu.com/clipboard.js/1.6.1/clipboard.min.js"></script>
 	<script>
-		var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-		var base64DecodeChars = new Array(
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-			-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
-			52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
-			-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-			15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
-			-1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-			41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
-
-		function base64decode(str) {
-			var c1, c2, c3, c4;
-			var i, len, out;
-
-			len = str.length;
-			i = 0;
-			out = "";
-			while (i < len) {
-				/* c1 */
-				do {
-					c1 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
-				} while (i < len && c1 == -1);
-				if (c1 == -1)
-					break;
-
-				/* c2 */
-				do {
-					c2 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
-				} while (i < len && c2 == -1);
-				if (c2 == -1)
-					break;
-
-				out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
-
-				/* c3 */
-				do {
-					c3 = str.charCodeAt(i++) & 0xff;
-					if (c3 == 61)
-						return out;
-					c3 = base64DecodeChars[c3];
-				} while (i < len && c3 == -1);
-				if (c3 == -1)
-					break;
-
-				out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
-
-				/* c4 */
-				do {
-					c4 = str.charCodeAt(i++) & 0xff;
-					if (c4 == 61)
-						return out;
-					c4 = base64DecodeChars[c4];
-				} while (i < len && c4 == -1);
-				if (c4 == -1)
-					break;
-				out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
-			}
-			return out;
+		//读取url参数
+		function getQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return unescape(r[2]); return null;
 		}
 
-
-
-		function getQueryVariable() {
-
-			var url = decodeURI(location.href);
-			console.log(url)
-			if (url.indexOf("&") == -1) { //等于-1表示这个字符串中没有o这个字符
-				var paraString = url.substring(url.indexOf("key=") + 4, url.length);
+		//字符串转时间
+		var stringToDate = function (dateStr, separator) {
+			if (!separator) {
+				separator = "-";
+			}
+			var dateArr = dateStr.split(separator);
+			var year = parseInt(dateArr[0]);
+			var month;
+			//处理月份为04这样的情况                          
+			if (dateArr[1].indexOf("0") == 0) {
+				month = parseInt(dateArr[1].substring(1));
 			} else {
-				var paraString = url.substring(url.indexOf("key=") + 4, url.indexOf("&") + 1);
-
+				month = parseInt(dateArr[1]);
 			}
-
-
-			return paraString;
-
-
+			var day = parseInt(dateArr[2]);
+			var date = new Date(year, month - 1, day);
+			return date;
 		}
-		var clipboard = new Clipboard('.icopy');
-		clipboard.on('success', function (e) {
-			if (e.trigger.disabled == false || e.trigger.disabled == undefined) {
-				e.trigger.innerHTML = "复制成功，打开【手陶】购买";
-				e.trigger.style.backgroundColor = "#78bd33";
-				e.trigger.disabled = true;
-				setTimeout(function () {
-					e.trigger.innerHTML = "点击复制";
-					e.trigger.style.backgroundColor = "#fb6a65";
-					e.trigger.disabled = false;
-				},
-					2000);
-			}
-		});
-		clipboard.on('error', function (e) {
-			e.trigger.innerHTML = "复制失败,请手动复制";
-			e.trigger.style.backgroundColor = "#b5b4b4";
-		});
-		$(function () {
-			var key = getQueryVariable();
-			var json = base64decode(key);
-			var jsObject = JSON.parse(json);
-			console.log(json)
-			var np = "￥" + jsObject.tkl + "￥"
+		function start() {
+			var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+			var base64DecodeChars = new Array(
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+				-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
+				52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
+				-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+				15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
+				-1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+				41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
 
-			var np = np.match(/\w+/);
-			var np = "￥" + np + "￥"
+			function base64decode(str) {
+				var c1, c2, c3, c4;
+				var i, len, out;
 
-			$("#icopy").attr("data-clipboard-text", np);
-			$("#np").text(np);
-			$("#type-bimg").attr('src', jsObject.picture);
-			var mall = getQueryVariable("mall");
-			if (mall) {
-				$("#tomall").attr('href', mall);
-				$("#tomall").css("display", "block");
+				len = str.length;
+				i = 0;
+				out = "";
+				while (i < len) {
+					/* c1 */
+					do {
+						c1 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
+					} while (i < len && c1 == -1);
+					if (c1 == -1)
+						break;
+
+					/* c2 */
+					do {
+						c2 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
+					} while (i < len && c2 == -1);
+					if (c2 == -1)
+						break;
+
+					out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
+
+					/* c3 */
+					do {
+						c3 = str.charCodeAt(i++) & 0xff;
+						if (c3 == 61)
+							return out;
+						c3 = base64DecodeChars[c3];
+					} while (i < len && c3 == -1);
+					if (c3 == -1)
+						break;
+
+					out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
+
+					/* c4 */
+					do {
+						c4 = str.charCodeAt(i++) & 0xff;
+						if (c4 == 61)
+							return out;
+						c4 = base64DecodeChars[c4];
+					} while (i < len && c4 == -1);
+					if (c4 == -1)
+						break;
+					out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
+				}
+				return out;
 			}
-			var word = document.querySelector('.cccccccckk');
-			document.addEventListener("selectionchange",
-				function (e) {
-					window.getSelection().selectAllChildren(word);
-				}, false);
-			$("#phone-main").next().hide();
-		});
-	</script>
-	<script>
-		$(function () {
-			$.getJSON("username.json", function (data) {
-				$.each(data, function (index, obj) {
+
+
+
+			function getQueryVariable() {
+
+				var url = decodeURI(location.href);
+				console.log("解码后的url" + url)
+				if (url.indexOf("&") == -1) { //等于-1表示这个字符串中没有o这个字符
+					var paraString = url.substring(url.indexOf("key=") + 4, url.length);
+				} else {
+					var paraString = url.substring(url.indexOf("key=") + 4, url.indexOf("&") + 1);
+
+				}
+
+
+				return paraString;
+
+
+			}
+			var clipboard = new Clipboard('.icopy');
+			clipboard.on('success', function (e) {
+				if (e.trigger.disabled == false || e.trigger.disabled == undefined) {
+					e.trigger.innerHTML = "复制成功，打开【手陶】购买";
+					e.trigger.style.backgroundColor = "#78bd33";
+					e.trigger.disabled = true;
+					setTimeout(function () {
+						e.trigger.innerHTML = "点击复制";
+						e.trigger.style.backgroundColor = "#fb6a65";
+						e.trigger.disabled = false;
+					},
+						2000);
+				}
+			});
+			clipboard.on('error', function (e) {
+				e.trigger.innerHTML = "复制失败,请手动复制";
+				e.trigger.style.backgroundColor = "#b5b4b4";
+			});
+			$(function () {
+				var key = getQueryVariable();
+				var json = base64decode(key);
+				var jsObject = JSON.parse(json);
+				console.log("解码后的json" + json)
+				var np = "￥" + jsObject.tkl + "￥"
+
+				var np = np.match(/\w+/);
+				var np = "￥" + np + "￥"
+
+				$("#icopy").attr("data-clipboard-text", np);
+				$("#np").text(np);
+				$("#type-bimg").attr('src', jsObject.picture);
+				var mall = getQueryVariable("mall");
+				if (mall) {
+					$("#tomall").attr('href', mall);
+					$("#tomall").css("display", "block");
+				}
+				var word = document.querySelector('.cccccccckk');
+				document.addEventListener("selectionchange",
+					function (e) {
+						window.getSelection().selectAllChildren(word);
+					}, false);
+				$("#phone-main").next().hide();
+			});
+		}
+		//检测账号
+		$.getJSON("username.json", function (data) {
+			$.each(data, function (index, obj) {
+				if (username == obj["username"]) {
 					console.log("账号" + obj["username"])
-					console.log("测试信息" + obj["info"])
-				})
+					console.log("有效期" + obj["date"])
+					var usernameDate = stringToDate(obj["date"]);
+					var nowDate = new Date()
+					if (nowDate < usernameDate) {
+						start()
+						break
+					}
+				} else {
+					//账号不存在
+					console.log("账号不合法")
+				}
+
 			})
 		})
 	</script>
