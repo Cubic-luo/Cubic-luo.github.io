@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport"
-		content="width=device-width,initial-scale=1.0,maximum-scale=1, minimum-scale=1, user-scalable=no">
+<!-- saved from url=(0031)http://a1.tool999.com/api4.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<link rel="icon" href="data:image/ico;base64,aWNv">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1, minimum-scale=1, user-scalable=no">
 	<title>开心每一天</title>
 	<style type="text/css">
 		body {
@@ -19,6 +18,7 @@
 		.scenograph #type-bimg {
 			box-shadow: 0px 4px 8px rgba(21, 0, 71, .1);
 			width: 100%;
+			height: 100%;
 		}
 
 		.drugsword {
@@ -113,7 +113,7 @@
 			color: white;
 			font-size: 14px;
 			margin: 6px auto 0px;
-			padding: 6px;
+			padding: 10px;
 			margin-bottom: 2px;
 		}
 
@@ -130,6 +130,43 @@
 		.kz-float-layer {
 			display: none !important;
 		}
+
+		#imgBtn {
+			display: none;
+			text-align: center;
+			background: #fb6a65;
+			border-radius: 5px;
+			color: white;
+			font-size: 14px;
+			margin: 14px;
+			padding: 10px;
+			margin-bottom: 2px;
+		}
+
+		#textModel {
+			display: none;
+			background: white;
+			border: 1px dashed #fb6a65;
+			padding: .5rem;
+			border-radius: 5px;
+			margin: 14px;
+			line-height: 1.6;
+		}
+
+		#textModel p {
+			margin: 0;
+		}
+
+		#notice {
+			display: none;
+			color: red;
+			background: white;
+			border: 1px dashed #fb6a65;
+			padding: .5rem;
+			border-radius: 5px;
+			margin: 14px;
+			line-height: 1.6;
+		}
 	</style>
 </head>
 
@@ -137,8 +174,9 @@
 	<div class="page-w" style="background-color:tranparent;">
 		<div id="page-content" class="page-content">
 			<div class="mod mod-html">
+				<div id="imgBtn">展开商品图片</div>
 				<div class="scenograph">
-					<img id="type-bimg" src="">
+					<img id="type-bimg" src="http://a1.tool999.com/api4.html">
 				</div>
 				<div class="drugsword">
 					<div class="medicine-bag">
@@ -146,14 +184,13 @@
 							<div id="cccccccckk" class="cccccccckk">
 								复制红框内信息打开→手
 								<a>
-									<img src="https://img.alicdn.com/imgextra/i1/2537963239/O1CN011ZnVKLbSaP1cLAQ_!!2537963239.png"
-										style="width: 6%;">
+									<img src="./api4_files/O1CN011ZnVKLbSaP1cLAQ_!!2537963239.png" style="width: 6%;">
 								</a>APP←即可领优惠券
 								<span id="np"></span>
 							</div>
 						</div>
 					</div>
-					<div type="button" data-clipboard-text="" class="icopy" id="icopy">一键复制</div>
+					<div type="button" data-clipboard-text="" class="icopy" id="icopy" onclick="">一键复制</div>
 					<div id="copy-tip" class="copy-tip">
 						<span>长按框内</span>
 						<span class="jtone"></span>
@@ -170,22 +207,81 @@
 			</div>
 		</div>
 	</div>
-	<div style="padding:0 12px;height:90px;">
-		<img src="22.png" style="width:100%;">
+	<!-- 通知开始 -->
+	<div id="notice"></div>
+	<!-- 通知结束 -->
+	<!-- 下单注意事项图片开始 -->
+	<div style="padding:0 12px;margin-bottom: 15px;">
+		<img id="tipImg1" alt="下单注意事项" src="http://a1.tool999.com/api4.html" style="width:100%;height: 100%;display: none">
 	</div>
-	<div
-		style="font-size:10px;display:block;text-align:center;color: #06ad3d;position: fixed;bottom: 0;left: 0;right: 0;line-height: 0.2;">
+	<!-- 下单注意事项图片结束 -->
+	<!-- 下单注意事项，文字版开始 -->
+	<div id="textModel">
+		<p style="text-align:center;color:rgb(0, 153, 255)">注意事项，新人必看</p>
+		<p>① 付款时不要使用红包抵扣,否则返利会减少</p>
+		<p>② 购买多件商品，先删掉购物车里该商品，查返利后重新加入购物车,可以一起付款</p>
+		<p>③ 付款后5分钟内未收到"付费成功"的微信提示消息，请手动发订单编号给我(纯数字)</p>
+	</div>
+	<!-- 下单注意事项，文字版结束 -->
+	<!-- 水印信息开始 -->
+	<div style="font-size:10px;display:block;text-align:center;color: #06ad3d;position: fixed;bottom: 0;left: 0;right: 0;line-height: 0.2;">
 		<p id="username">中间页定制QQ1981729945</p>
 	</div>
-	<script type="text/javascript" src="//lib.baomitu.com/jquery/2.2.4/jquery.min.js"></script>
-	<script type="text/javascript" src="//lib.baomitu.com/clipboard.js/1.6.1/clipboard.min.js"></script>
+	<!-- 水印信息结束-->
+
+	<script type="text/javascript" src="./api4_files/zepto.min.js.下载"></script>
+	<script type="text/javascript" src="./api4_files/clipboard.min.js.下载"></script>
 	<script>
+		//账号库
+		var accountArray = [
+			{
+				"username": "tool999",
+				"date": "2020-3-17"
+			},
+			{
+				"username": "cx523902",
+				"date": "2020-3-17"
+			},
+			{
+				"username": "buybuybuy65",
+				"date": "2020-4-23"
+			}
+		]
+		// 无跳转链接版本特殊处理开始
+		function getUsername(){
+			var url = decodeURI(location.href);
+			return url.split("qxusername=")[1].split("qxtype")[0]
+		}
+		function getType(){
+			var url = decodeURI(location.href);
+			return url.split("qxtype=")[1].split("qxnotice")[0]
+		}
+		function getnotice(){
+			var url = decodeURI(location.href);
+			return url.split("qxnotice=")[1].split("&from")[0]
+		}
+		function geturl(){
+			var url = decodeURI(location.href);
+			return url.split("qxusername=")[0]
+		}
+		function dealUrl(){
+			var url=geturl()+"&qxusername="+getUsername()+"&qxtype="+getType()+"&qxnotice="+getnotice()
+			return url
+		}
+		var url=decodeURI(location.href)
+		if(url.indexOf('&from=singlemessage')!=-1){
+			url=dealUrl()
+		}
+		console.log("正解url：{}" + url)
+		// 无跳转链接版本特殊处理结束
 		//读取url参数
 		function getQueryString(name) {
 			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-			var r = window.location.search.substr(1).match(reg);
+			var r = url.substr(1).match(reg);
 			if (r != null) return unescape(r[2]); return null;
 		}
+
+		
 
 		//字符串转时间
 		var stringToDate = function (dateStr, separator) {
@@ -205,25 +301,52 @@
 			var date = new Date(year, month - 1, day);
 			return date;
 		}
-		//检测账号
-		var username = getQueryString("username")
-		$.getJSON("username.json", function (data) {
-			$.each(data, function (index, obj) {
-				if (username == obj["username"]) {
-					console.log("账号 " + obj["username"])
-					console.log("有效期 " + obj["date"])
-					var usernameDate = stringToDate(obj["date"]);
-					var nowDate = new Date()
-					if (nowDate < usernameDate) {
-						start()
-						$("#username").text("中间页定制QQ1981729945 返利加微信 " + obj["username"])
-					}
-				} else {
-					//账号不存在
-					console.log("账号不合法")
-				}
 
-			})
+		//检测账号
+		var username = getQueryString("qxusername") //用户名
+		//模板类型 
+		//0：默认模板，和官方模板一致；
+		//1：不显示商品图片，底部显示下单注意事项图片版
+		//2：显示商品图片，底部显示下单注意事项图片
+		//3: 不显示商品图片，底部显示文字版
+		//4：显示商品图片，底部显示文字版
+		var qxType = getQueryString("qxtype")
+		var notice = getQueryString("qxnotice") //通知
+		var imgUrl = null  //商品图片url
+
+		//默认行为，通知只要有就显示在底部
+		if (notice) {
+			$("#notice").text(notice);
+			$("#notice").show()
+		}
+
+		for (var i = 0, len = accountArray.length; i < len; i++) {
+			var obj = accountArray[i]
+			if (username == obj["username"]) {
+				console.log("账号 " + obj["username"])
+				console.log("有效期 " + obj["date"])
+				var usernameDate = stringToDate(obj["date"]);
+				console.log("test&&&" + usernameDate)
+				var nowDate = new Date()
+				if (nowDate < usernameDate) {
+					//处理图片的显示
+					if (qxType == 1 || qxType == 3) {
+						$("#imgBtn").show()
+						$(".scenograph").hide()
+					}
+					$("#username").text("返利加微信 " + obj["username"])
+					start()
+				}
+				break
+			} else {
+				//账号不存在
+				console.log("账号不合法")
+			}
+		}
+		$("#imgBtn").click(function () {
+			$("#imgBtn").hide()
+			$("#type-bimg").attr('src', imgUrl);
+			$(".scenograph").show()
 		})
 		function start() {
 			var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -287,23 +410,16 @@
 				return out;
 			}
 
-
-
 			function getQueryVariable() {
-
-				var url = decodeURI(location.href);
-				console.log("解码后的url" + url)
-				if (url.indexOf("&") == -1) { //等于-1表示这个字符串中没有o这个字符
-					var paraString = url.substring(url.indexOf("key=") + 4, url.length);
+				var url2 = decodeURI(url);
+				console.log("解码后的url" + url2)
+				if (url2.indexOf("&") == -1) { //等于-1表示这个字符串中没有o这个字符
+					var paraString = url2.substring(url2.indexOf("key=") + 4, url2.length);
 				} else {
-					var paraString = url.substring(url.indexOf("key=") + 4, url.indexOf("&") + 1);
+					var paraString = url2.substring(url2.indexOf("key=") + 4, url2.indexOf("&") + 1);
 
 				}
-
-
 				return paraString;
-
-
 			}
 			var clipboard = new Clipboard('.icopy');
 			clipboard.on('success', function (e) {
@@ -329,13 +445,14 @@
 				var jsObject = JSON.parse(json);
 				console.log("解码后的json" + json)
 				var np = "￥" + jsObject.tkl + "￥"
-
 				var np = np.match(/\w+/);
 				var np = "￥" + np + "￥"
-
 				$("#icopy").attr("data-clipboard-text", np);
 				$("#np").text(np);
-				$("#type-bimg").attr('src', jsObject.picture);
+				imgUrl = jsObject.picture;
+				if (qxType == 0 || qxType == null || qxType == 2 || qxType == 4) {
+					$("#type-bimg").attr('src', jsObject.picture);
+				}
 				var mall = getQueryVariable("mall");
 				if (mall) {
 					$("#tomall").attr('href', mall);
@@ -349,8 +466,20 @@
 				$("#phone-main").next().hide();
 			});
 		}
+		//处理文字版
+		if (qxType == 3 || qxType == 4) {
+			$("#textModel").show()
+		}
+		//延时加载下单注意事项图片
+		if (qxType == 1 || qxType == 2) {
+			setTimeout(() => {
+				$("#tipImg1").show()
+				$("#tipImg1").attr('src', '22.png');
+			}, 300);
+		}
+
 
 	</script>
-</body>
 
-</html
+
+</body></html>
